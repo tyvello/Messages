@@ -1,6 +1,7 @@
 package com.example
 
 import android.Manifest
+import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -87,6 +88,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
+        // Lock screen to portrait orientation to maintain clean vertical phone layout
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
+
         // Configure edge-to-edge with transparent navigation bar and light icon contrast
         enableEdgeToEdge(
             statusBarStyle = SystemBarStyle.light(
@@ -239,9 +243,15 @@ fun MainAppScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                .padding(innerPadding),
+            contentAlignment = Alignment.TopCenter
         ) {
-            Crossfade(targetState = selectedTab, label = "TabTransition") { tab ->
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .widthIn(max = 600.dp)
+            ) {
+                Crossfade(targetState = selectedTab, label = "TabTransition") { tab ->
                 when (tab) {
                     AppTab.INBOX -> InboxScreen(
                         messages = filteredMessages,
@@ -266,6 +276,7 @@ fun MainAppScreen(
             }
         }
     }
+}
 }
 
 @Composable
